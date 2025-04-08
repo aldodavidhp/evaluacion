@@ -66,12 +66,12 @@ def process_student_file(file):
 def evaluate_with_gemini(criteria, student_work, student_name=""):
     prompt = f"""
     Eres un profesor universitario experto en evaluación de trabajos académicos. 
-    A continuación te proporciono los criterios de evaluación y el trabajo de un estudiante.
+    A continuación te proporciono los criterios de evaluación y el trabajo de un estudiante o docente.
     
     **CRITERIOS DE EVALUACIÓN:**
     {criteria}
     
-    **TRABAJO DEL ESTUDIANTE {student_name.upper() if student_name else ''}:**
+    **TRABAJO DEL ESTUDIANTE O DOCENTE {student_name.upper() if student_name else ''}:**
     {student_work}
     
     Proporciona una evaluación detallada que incluya:
@@ -84,7 +84,9 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     
     Usa un tono profesional pero cercano, destacando los logros y ofreciendo guía para mejorar.
     Organiza la respuesta con encabezados claros y bullet points para mejor legibilidad.
+    Que la retroalimentación no exceda de los 200 caracteres.
     """
+    
     
     try:
         response = model.generate_content(
