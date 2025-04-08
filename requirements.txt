@@ -1,0 +1,6 @@
+streamlit
+os
+google.generativeai
+PyPDF2
+docx
+PIL
