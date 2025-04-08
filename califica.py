@@ -82,7 +82,7 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     3. **COMENTARIOS FINALES** (retroalimentación constructiva y motivadora)
     
     Usa un tono profesional pero cercano, destacando los logros y ofreciendo guía para mejorar.
-    Organiza la respuesta con encabezados claros y bullet points para mejor legibilidad.
+    Organiza la respuesta con encabezados claros y bullet points para mejor legibilidad. La retroalimentación constructiva y motivadora sea máximo 200 caracteres.
    
     """
     
