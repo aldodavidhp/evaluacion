@@ -77,8 +77,8 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     Proporciona una evaluación detallada que incluya:
     
     
-    1. **PUNTOS FUERTES** (3-5 aspectos bien desarrollados)
-    2. **ÁREAS DE MEJORA** (3-5 aspectos a mejorar con sugerencias concretas)
+    1. **PUNTOS FUERTES** (1-3 aspectos bien desarrollados)
+    2. **ÁREAS DE MEJORA** (1-3 aspectos a mejorar con sugerencias concretas)
     3. **COMENTARIOS FINALES** (retroalimentación constructiva y motivadora)
     
     Usa un tono profesional pero cercano, destacando los logros y ofreciendo guía para mejorar.
