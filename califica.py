@@ -76,15 +76,14 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     
     Proporciona una evaluación detallada que incluya:
     
-    1. **CALIFICACIÓN GLOBAL** (0-100) basada en los criterios
-    2. **PUNTOS FUERTES** (3-5 aspectos bien desarrollados)
-    3. **ÁREAS DE MEJORA** (3-5 aspectos a mejorar con sugerencias concretas)
-    4. **EVALUACIÓN POR CRITERIO** (analiza cada criterio específicamente)
-    5. **COMENTARIOS FINALES** (retroalimentación constructiva y motivadora)
+    
+    1. **PUNTOS FUERTES** (3-5 aspectos bien desarrollados)
+    2. **ÁREAS DE MEJORA** (3-5 aspectos a mejorar con sugerencias concretas)
+    3. **COMENTARIOS FINALES** (retroalimentación constructiva y motivadora)
     
     Usa un tono profesional pero cercano, destacando los logros y ofreciendo guía para mejorar.
     Organiza la respuesta con encabezados claros y bullet points para mejor legibilidad.
-    Que la retroalimentación no exceda de los 200 caracteres.
+   
     """
     
     
