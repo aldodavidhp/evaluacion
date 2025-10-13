@@ -1,6 +1,6 @@
-streamlit==1.44.1
+streamlit
 google-generativeai
-python-docx==0.8.11
-PyPDF2==3.0.1
-pillow==10.3.0
+python-docx
+PyPDF2
+pillow
 pandas
