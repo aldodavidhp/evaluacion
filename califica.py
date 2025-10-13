@@ -131,9 +131,9 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     """
     
     try:
-        # --- SOLUCIÓN DEL ERROR (Intento #4: Estructura Anidada con response_config) ---
-        # Pasamos un diccionario completo como 'config' para máxima compatibilidad,
-        # separando la configuración de generación de la configuración de respuesta (JSON).
+        # --- SOLUCIÓN DEL ERROR (Sintaxis compatible con generation_config) ---
+        # Pasamos un diccionario completo como 'generation_config' que la API de Gemini
+        # mapea correctamente para la generación de JSON.
         full_config = {
             # Configuración de Generación (Temperatura, Tokens)
             "temperature": temperature,
@@ -145,11 +145,10 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
             }
         }
         
-        # El SDK de Gemini intenta mapear este diccionario a la estructura de la API.
-           response = model.generate_content(prompt, generation_config=full_config)
+        # Uso de generation_config, que resolvió el error de argumento.
+        response = model.generate_content(prompt, generation_config=full_config)
 
-
-      
+        
         # Parsear el JSON del texto de respuesta
         structured_data = json.loads(response.text)
         
@@ -227,7 +226,7 @@ with tab2:
                                     "I. Elementos Curriculares y Contexto (Plantilla)": structured_result.get("I_ElementosCurriculares", "N/A"),
                                     "II. Secuencia Didáctica JUMP Math (Metodología)": structured_result.get("II_SecuenciaDidactica", "N/A"),
                                     "III. Aplicación de Principios Didácticos JUMP Math": structured_result.get("III_PrincipiosDidacticos", "N/A"),
-                                    "IV. Instrumentos de Evaluación": structured_result.get("IV. Instrumentos de Evaluación", "N/A"),
+                                    "IV. Instrumentos de Evaluación": structured_result.get("IV_InstrumentosEvaluacion", "N/A"),
                                     "V. Evidencias de Implementación (Anexo)": structured_result.get("V_EvidenciasImplementacion", "N/A"),
                                     "Total": structured_result.get("Total_Calculado", "N/A"),
                                     "Retroalimentación": structured_result.get("Retroalimentacion_Corta", "N/A"),
@@ -266,7 +265,7 @@ with tab2:
             # --- Generación y Descarga de CSV (Después de procesar todos los archivos) ---
             if st.session_state.evaluation_results:
                 st.divider()
-                st.subheader("📊 Resumen de Evaluaciones (CSV)")
+                st.subheader("📊 Resumen de Evaluaciones (TXT para Excel)")
                 
                 # Crear DataFrame y mostrarlo
                 df = pd.DataFrame(st.session_state.evaluation_results)
@@ -282,4 +281,3 @@ with tab2:
                     mime='text/plain', # MIME type de texto plano
                     help="Descarga un archivo de texto separado por comas, ideal para abrir en Excel o Google Sheets."
                 )
-
