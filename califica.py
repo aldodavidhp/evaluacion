@@ -133,7 +133,8 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     try:
         response = model.generate_content(
             prompt,
-            config=genai.types.GenerateContentConfig(
+            # SOLUCIÓN DEL ERROR: Se cambia GenerateContentConfig a GenerationConfig
+            config=genai.types.GenerationConfig( 
                 temperature=temperature,
                 max_output_tokens=max_tokens,
                 response_mime_type="application/json",
