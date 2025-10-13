@@ -146,11 +146,10 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
         }
         
         # El SDK de Gemini intenta mapear este diccionario a la estructura de la API.
-        response = model.generate_content(
-            prompt,
-            config=full_config
-        )
-        
+           response = model.generate_content(prompt, generation_config=full_config)
+
+
+      
         # Parsear el JSON del texto de respuesta
         structured_data = json.loads(response.text)
         
@@ -283,3 +282,4 @@ with tab2:
                     mime='text/plain', # MIME type de texto plano
                     help="Descarga un archivo de texto separado por comas, ideal para abrir en Excel o Google Sheets."
                 )
+
