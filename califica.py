@@ -131,17 +131,19 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     """
     
     try:
+        # --- SOLUCIÓN DEL ERROR ---
+        # Pasamos un diccionario completo como 'config' para máxima compatibilidad.
+        # Esto contiene tanto los parámetros de generación como los de estructuración.
+        full_config = {
+            "temperature": temperature,
+            "max_output_tokens": max_tokens,
+            "response_mime_type": "application/json",
+            "response_schema": EVALUATION_SCHEMA
+        }
+
         response = model.generate_content(
             prompt,
-            # SOLUCIÓN DEL ERROR: Se encapsulan los parámetros de estructuración
-            # (response_mime_type y response_schema) dentro del objeto GenerationConfig
-            # y se pasa este objeto al argumento 'config' del método generate_content.
-            config=genai.types.GenerationConfig( 
-                temperature=temperature,
-                max_output_tokens=max_tokens,
-                response_mime_type="application/json",
-                response_schema=EVALUATION_SCHEMA,
-            )
+            config=full_config # Pasamos el diccionario como argumento 'config'
         )
         
         # Parsear el JSON del texto de respuesta
