@@ -133,12 +133,15 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     try:
         response = model.generate_content(
             prompt,
-            # SOLUCIÓN DEL ERROR: Se cambia GenerateContentConfig a GenerationConfig
-            config=genai.types.GenerationConfig( 
+            # CORRECCIÓN: Los argumentos de la respuesta estructurada (JSON) se pasan
+            # directamente a generate_content, no dentro del objeto GenerationConfig.
+            response_mime_type="application/json",
+            response_schema=EVALUATION_SCHEMA,
+            
+            # El objeto GenerationConfig solo contiene los parámetros de generación
+            generation_config=genai.types.GenerationConfig( 
                 temperature=temperature,
                 max_output_tokens=max_tokens,
-                response_mime_type="application/json",
-                response_schema=EVALUATION_SCHEMA
             )
         )
         
@@ -150,6 +153,8 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
         return full_evaluation, structured_data
         
     except Exception as e:
+        # Se incluye el detalle del error en el log de Streamlit, pero se pasa un error genérico
+        # para evitar fallos catastróficos.
         st.error(f"Error al evaluar con Gemini para {student_name}: {str(e)}")
         # Devolver errores
         return f"Error al evaluar: {str(e)}", None
