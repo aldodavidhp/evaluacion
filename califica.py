@@ -131,19 +131,24 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     """
     
     try:
-        # --- SOLUCIÓN DEL ERROR ---
-        # Pasamos un diccionario completo como 'config' para máxima compatibilidad.
-        # Esto contiene tanto los parámetros de generación como los de estructuración.
+        # --- SOLUCIÓN DEL ERROR (Intento #4: Estructura Anidada con response_config) ---
+        # Pasamos un diccionario completo como 'config' para máxima compatibilidad,
+        # separando la configuración de generación de la configuración de respuesta (JSON).
         full_config = {
+            # Configuración de Generación (Temperatura, Tokens)
             "temperature": temperature,
             "max_output_tokens": max_tokens,
-            "response_mime_type": "application/json",
-            "response_schema": EVALUATION_SCHEMA
+            # Configuración de la Respuesta Estructurada (JSON)
+            "response_config": {
+                "response_mime_type": "application/json",
+                "response_schema": EVALUATION_SCHEMA
+            }
         }
-
+        
+        # El SDK de Gemini intenta mapear este diccionario a la estructura de la API.
         response = model.generate_content(
             prompt,
-            config=full_config # Pasamos el diccionario como argumento 'config'
+            config=full_config
         )
         
         # Parsear el JSON del texto de respuesta
@@ -268,13 +273,13 @@ with tab2:
                 df = pd.DataFrame(st.session_state.evaluation_results)
                 st.dataframe(df, use_container_width=True)
                 
-                # Generar CSV para descarga
+                # Generar CSV para descarga (SOLICITUD DE CAMBIO A TXT)
                 csv_output = df.to_csv(index=False, encoding='utf-8')
                 
                 st.download_button(
-                    label="⬇️ Descargar Tabla de Calificaciones (CSV)",
+                    label="⬇️ Descargar Tabla de Calificaciones (TXT para Excel)",
                     data=csv_output,
-                    file_name='resumen_evaluaciones_gemini.csv',
-                    mime='text/csv',
-                    help="Descarga un archivo CSV con las calificaciones estructuradas para todos los trabajos."
+                    file_name='resumen_evaluaciones_gemini.txt', # Extensión .txt
+                    mime='text/plain', # MIME type de texto plano
+                    help="Descarga un archivo de texto separado por comas, ideal para abrir en Excel o Google Sheets."
                 )
