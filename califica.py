@@ -279,13 +279,13 @@ with tab2:
                 df = pd.DataFrame(st.session_state.evaluation_results)
                 st.dataframe(df, use_container_width=True)
                 
-                # Generar CSV para descarga (SOLICITUD DE CAMBIO A TXT)
+                # Generar CSV para descarga
                 csv_output = df.to_csv(index=False, encoding='utf-8')
                 
                 st.download_button(
-                    label="⬇️ Descargar Tabla de Calificaciones (TXT para Excel)",
+                    label="⬇️ Descargar Tabla de Calificaciones (CSV)",
                     data=csv_output,
-                    file_name='resumen_evaluaciones_gemini.txt', # Extensión .txt
-                    mime='text/plain', # MIME type de texto plano
-                    help="Descarga un archivo de texto separado por comas, ideal para abrir en Excel o Google Sheets."
+                    file_name='resumen_evaluaciones_gemini.csv', # Extensión .csv
+                    mime='text/csv', # MIME type para CSV
+                    help="Descarga un archivo CSV con el resumen de las calificaciones."
                 )
