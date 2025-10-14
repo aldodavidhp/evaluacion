@@ -279,8 +279,9 @@ with tab2:
                 df = pd.DataFrame(st.session_state.evaluation_results)
                 st.dataframe(df, use_container_width=True)
                 
-                # Generar CSV para descarga
-                csv_output = df.to_csv(index=False, encoding='utf-8')
+                # Generar CSV para descarga, usando 'utf-8-sig' para asegurar
+                # la compatibilidad de acentos y caracteres especiales en Excel.
+                csv_output = df.to_csv(index=False, encoding='utf-8-sig')
                 
                 st.download_button(
                     label="⬇️ Descargar Tabla de Calificaciones (CSV)",
