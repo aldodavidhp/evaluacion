@@ -130,6 +130,15 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     
     """
     
+    # Se definen configuraciones de seguridad para evitar bloqueos por falsos positivos.
+    # ATENCIÓN: Esto deshabilita los filtros de contenido dañino. Usar con precaución.
+    safety_settings = {
+        "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
+        "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
+        "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
+        "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
+    }
+
     try:
         full_config = {
             "temperature": temperature,
@@ -138,11 +147,12 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
             "response_schema": EVALUATION_SCHEMA
         }
         
-        response = model.generate_content(prompt, generation_config=full_config)
+        response = model.generate_content(
+            prompt, 
+            generation_config=full_config,
+            safety_settings=safety_settings  # Se añaden las configuraciones de seguridad
+        )
 
-        # El acceso a `response.text` puede fallar si la respuesta fue bloqueada por seguridad.
-        # `json.loads` puede fallar si el texto no es un JSON válido.
-        # Este bloque maneja ambos casos de forma más específica.
         try:
             structured_data = json.loads(response.text)
             full_evaluation = structured_data.get("Evaluacion_Completa_Markdown", "Error al extraer la evaluación detallada.")
@@ -152,8 +162,9 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
             st.text_area("Respuesta recibida del modelo (JSON inválido):", response.text)
             return "Error de formato JSON", None
         except ValueError:
-            st.error(f"La respuesta para '{student_name}' fue bloqueada por políticas de seguridad o está vacía. Razón: {response.prompt_feedback}")
-            return f"Respuesta bloqueada o vacía", None
+            # Este error ahora es menos probable, pero se mantiene por si la respuesta viene vacía por otras razones.
+            st.error(f"La respuesta para '{student_name}' está vacía o no se pudo procesar. Razón: {response.prompt_feedback}")
+            return f"Respuesta vacía o bloqueada", None
         
     except Exception as e:
         # Captura otros errores como problemas de autenticación (API Key) o de red.
