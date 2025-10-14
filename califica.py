@@ -16,7 +16,7 @@ st.set_page_config(page_title="Evaluador de Trabajos", page_icon="📝", layout=
 # directamente en el código.
 # Si estás ejecutando esto en un entorno sin st.secrets, coloca tu clave aquí:
 genai.configure(api_key="AIzaSyAtsIgmN8GWnuy-tUhPIt9odwouOvMuujc")
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 # Esquema JSON para la respuesta estructurada del modelo
 # Esto asegura que obtenemos datos limpios para el CSV.
@@ -279,3 +279,4 @@ with tab2:
                     mime='text/plain', # MIME type de texto plano
                     help="Descarga un archivo de texto separado por comas, ideal para abrir en Excel o Google Sheets."
                 )
+
