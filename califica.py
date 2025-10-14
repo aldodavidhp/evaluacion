@@ -54,7 +54,7 @@ with st.sidebar:
     # Sliders para ajustar el comportamiento de la IA
     temperature = st.slider("Creatividad de las evaluaciones", 0.0, 1.0, 0.5, help="Valores más altos = respuestas más creativas pero menos precisas")
     # Se reduce el max_tokens aquí, ya que la longitud total ahora incluye el JSON y el texto.
-    max_tokens = st.slider("Longitud máxima de respuestas", 100, 2500, 1500, help="Controla cuán detalladas serán las evaluaciones")
+    max_tokens = st.slider("Longitud máxima de respuestas", 100, 8000, 4000, help="Controla cuán detalladas serán las evaluaciones. Se ha aumentado el límite para evitar que las respuestas se corten.")
     
     st.divider()
     st.info("""
