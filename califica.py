@@ -131,35 +131,34 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     """
     
     try:
-        # --- SOLUCIÓN DEL ERROR (Sintaxis compatible con generation_config) ---
-        # Pasamos un diccionario completo como 'generation_config' que la API de Gemini
-        # mapea correctamente para la generación de JSON.
         full_config = {
-            # Configuración de Generación (Temperatura, Tokens)
             "temperature": temperature,
             "max_output_tokens": max_tokens,
-            # Configuración de la Respuesta Estructurada (JSON)
             "response_mime_type": "application/json",
             "response_schema": EVALUATION_SCHEMA
         }
         
-        # Uso de generation_config, que resolvió el error de argumento.
         response = model.generate_content(prompt, generation_config=full_config)
 
-        
-        # Parsear el JSON del texto de respuesta
-        structured_data = json.loads(response.text)
-        
-        # Devolver el texto completo para el display y el objeto estructurado para el CSV
-        full_evaluation = structured_data.get("Evaluacion_Completa_Markdown", "Error al extraer la evaluación detallada.")
-        return full_evaluation, structured_data
+        # El acceso a `response.text` puede fallar si la respuesta fue bloqueada por seguridad.
+        # `json.loads` puede fallar si el texto no es un JSON válido.
+        # Este bloque maneja ambos casos de forma más específica.
+        try:
+            structured_data = json.loads(response.text)
+            full_evaluation = structured_data.get("Evaluacion_Completa_Markdown", "Error al extraer la evaluación detallada.")
+            return full_evaluation, structured_data
+        except json.JSONDecodeError as e:
+            st.error(f"La respuesta para '{student_name}' no es un JSON válido. El modelo puede haber fallado en seguir las instrucciones. Error: {e}")
+            st.text_area("Respuesta recibida del modelo (JSON inválido):", response.text)
+            return "Error de formato JSON", None
+        except ValueError:
+            st.error(f"La respuesta para '{student_name}' fue bloqueada por políticas de seguridad o está vacía. Razón: {response.prompt_feedback}")
+            return f"Respuesta bloqueada o vacía", None
         
     except Exception as e:
-        # Se incluye el detalle del error en el log de Streamlit, pero se pasa un error genérico
-        # para evitar fallos catastróficos.
-        st.error(f"Error al evaluar con Gemini para {student_name}: {str(e)}")
-        # Devolver errores
-        return f"Error al evaluar: {str(e)}", None
+        # Captura otros errores como problemas de autenticación (API Key) o de red.
+        st.error(f"Ocurrió un error al contactar a la API de Gemini para {student_name}: {str(e)}")
+        return f"Error en la llamada a la API: {str(e)}", None
 
 # Interfaz principal
 tab1, tab2 = st.tabs(["📋 Subir Criterios", "🧑‍🎓 Evaluar Trabajos"])
@@ -279,4 +278,3 @@ with tab2:
                     mime='text/plain', # MIME type de texto plano
                     help="Descarga un archivo de texto separado por comas, ideal para abrir en Excel o Google Sheets."
                 )
-
