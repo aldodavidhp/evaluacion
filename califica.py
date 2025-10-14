@@ -139,10 +139,8 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
             "temperature": temperature,
             "max_output_tokens": max_tokens,
             # Configuración de la Respuesta Estructurada (JSON)
-            "response_config": {
-                "response_mime_type": "application/json",
-                "response_schema": EVALUATION_SCHEMA
-            }
+            "response_mime_type": "application/json",
+            "response_schema": EVALUATION_SCHEMA
         }
         
         # Uso de generation_config, que resolvió el error de argumento.
