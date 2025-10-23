@@ -23,6 +23,7 @@ model = genai.GenerativeModel('gemini-2.5-flash')
 EVALUATION_SCHEMA = {
     "type": "OBJECT",
     "properties": {
+        "Nombre_Estudiante": {"type": "STRING", "description": "El nombre completo del estudiante extraído del contenido del trabajo. Si no se encuentra, devolver 'No encontrado'."},
         "I_ElementosCurriculares": {"type": "STRING", "description": "Puntaje o nivel de logro para 'I. Elementos Curriculares y Contexto'"},
         "II_SecuenciaDidactica": {"type": "STRING", "description": "Puntaje o nivel de logro para 'II. Secuencia Didáctica JUMP Math'"},
         "III_PrincipiosDidacticos": {"type": "STRING", "description": "Puntaje o nivel de logro para 'III. Aplicación de Principios Didácticos JUMP Math'"},
@@ -33,7 +34,7 @@ EVALUATION_SCHEMA = {
         "Evaluacion_Completa_Markdown": {"type": "STRING", "description": "El texto completo y detallado de la evaluación, incluyendo Puntos Fuertes, Áreas de Mejora y Comentarios Finales en formato Markdown."}
     },
     "required": [
-        "I_ElementosCurriculares", "II_SecuenciaDidactica", "III_PrincipiosDidacticos",
+        "Nombre_Estudiante", "I_ElementosCurriculares", "II_SecuenciaDidactica", "III_PrincipiosDidacticos",
         "IV_InstrumentosEvaluacion", "V_EvidenciasImplementacion", "Total_Calculado",
         "Retroalimentacion_Corta", "Evaluacion_Completa_Markdown"
     ]
@@ -120,6 +121,7 @@ def evaluate_with_gemini(criteria, student_work, student_name=""):
     {student_work}
 
     **INSTRUCCIONES PARA EL JSON:**
+    * Para la clave 'Nombre_Estudiante', extrae el nombre completo del autor o estudiante del texto del trabajo. Si no es posible identificarlo, usa el valor 'Nombre no encontrado'.
     * Para las claves 'I' a 'V', asigna un Nivel de Logro o Puntaje basado en los criterios y el trabajo.
     * Para 'Total_Calculado', proporciona el puntaje o la calificación final.
     * Para 'Retroalimentacion_Corta', escribe el resumen conciso (MÁXIMO 200 CARACTERES) y motivador.
@@ -230,7 +232,7 @@ with tab2:
                             if structured_result:
                                 # Preparar y almacenar la fila de datos para el CSV
                                 csv_data = {
-                                    "Nombre": student_name,
+                                    "Nombre": structured_result.get("Nombre_Estudiante", student_name),
                                     "I. Elementos Curriculares y Contexto (Plantilla)": structured_result.get("I_ElementosCurriculares", "N/A"),
                                     "II. Secuencia Didáctica JUMP Math (Metodología)": structured_result.get("II_SecuenciaDidactica", "N/A"),
                                     "III. Aplicación de Principios Didácticos JUMP Math": structured_result.get("III_PrincipiosDidacticos", "N/A"),
